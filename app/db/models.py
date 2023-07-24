@@ -26,7 +26,7 @@ class Submenu(Base):
     menu_id = Column(Integer, ForeignKey('menu.id', ondelete='CASCADE'))
 
     menu = relationship('Menu', back_populates='submenus')
-    dishes = relationship('Dish', back_populates='submenu')
+    dishes = relationship('Dish', back_populates='submenu', cascade="all, delete")
 
     dishes_count = column_property(
         select(func.count(Dish.id)).where(
@@ -41,7 +41,7 @@ class Menu(Base):
     title = Column(String, unique=True)
     description = Column(String)
 
-    submenus = relationship('Submenu', back_populates='menu')
+    submenus = relationship('Submenu', back_populates='menu', cascade="all, delete")
 
     submenus_count = column_property(
         select(func.count(Submenu.id)).where(
