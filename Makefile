@@ -1,3 +1,13 @@
+fresh:
+	touch .evn
+	echo "POSTGRES_USER=postgres\nPOSTGRES_PASSWORD=postgres\nPOSTGRES_DB=postgres\nPOSTGRES_PORT=5432\nPOSTGRES_HOST=localhost" > .evn.example
+	poetry install
+	poetry shell
+	docker compose -f docker-compose-dev.yaml up -d
+	sleep 3
+	alembic upgrade head
+	uvicorn app.main:app
+
 up:
 	docker compose -f docker-compose-dev.yaml up -d
 	sleep 3

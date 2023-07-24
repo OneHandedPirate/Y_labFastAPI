@@ -22,9 +22,7 @@ class SQLAlchemyRepository(BaseCRUDRepository):
             stmt = select(self.model).where(self.model.id == args[0],
                 getattr(self.model, self.related_model_field) == args[1])
         obj = await self.session.scalar(stmt)
-        if not obj:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                detail=f'{self.model.__tablename__} not found')
+        self.verify_existence(obj)
         return obj
 
     async def get_list(self, *args):
@@ -40,9 +38,7 @@ class SQLAlchemyRepository(BaseCRUDRepository):
         stmt1 = select(self.model).where(self.model.id == _id)
         obj_to_update = await self.session.scalar(stmt1)
 
-        if not obj_to_update:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                detail=f'{self.model.__tablename__} not found')
+        self.verify_existence(obj_to_update)
 
         stmt2 = update(self.model).where(self.model.id == _id).values(**data)
 
@@ -53,10 +49,13 @@ class SQLAlchemyRepository(BaseCRUDRepository):
         return after_update
 
     async def delete(self, _id):
-        stmt = delete(self.model).where(self.model.id == _id)
-        await self.session.execute(stmt)
+        stmt = select(self.model).where(self.model.id == _id)
+        obj_to_delete = await self.session.scalar(stmt)
+        self.verify_existence(obj_to_delete)
+        await self.session.delete(obj_to_delete)
         await self.session.commit()
-        return {'detail': 'successfully deleted'}
+        return {'detail': f'{self.model.__tablename__} with the id {_id} '
+                          f'successfully deleted'}
 
     async def create(self, data, *args):
         stmt = select(self.model).filter(self.model.title == data['title'])
@@ -74,6 +73,11 @@ class SQLAlchemyRepository(BaseCRUDRepository):
         await self.session.commit()
         await self.session.refresh(new_obj)
         return new_obj
+
+    def verify_existence(self, obj):
+        if obj is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                                detail=f'{self.model.__tablename__} not found')
 
 
 class MenuRepository(SQLAlchemyRepository):
