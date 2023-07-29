@@ -7,5 +7,5 @@ down:
 	docker compose -f docker-compose-dev.yaml down
 tests:
 	docker compose -f docker-compose-tests.yaml up -d
-	docker compose -f docker-compose-tests.yaml logs -f app_test
+	docker compose -f docker-compose-tests.yaml logs -f app
 	docker compose -f docker-compose-tests.yaml down
