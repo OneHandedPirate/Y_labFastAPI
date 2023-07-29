@@ -14,8 +14,17 @@ pydantic = "^2.0.3"
 python-dotenv = "^1.0.0"
 sqlalchemy = "^2.0.19"
 uvicorn = "^0.23.1"
+pytest = "^7.4.0"
+pytest-asyncio = "^0.21.1"
+httpx = "^0.24.1"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = [
+    ".", "app",
+]
+asyncio_mode = "auto"

@@ -39,5 +39,5 @@ class DishResponse(BaseResponse):
 
     @model_validator(mode='after')
     def convert_price(self):
-        self.price = str(self.price)
+        self.price = f'{self.price:.2f}'
         return self

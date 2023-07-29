@@ -1,7 +1,7 @@
 # Y_lab FastAPI project
 
 
-Первое ДЗ.
+Второе ДЗ.
 
 ### Требования перед установкой:
 - установленный poetry;
@@ -13,21 +13,12 @@
 git clone https://github.com/OneHandedPirate/Y_labFastAPI.git
 cd Y_labFastAPI
 ```
-- выполнить команду `make init`. Она создает последовательно выполняет следующее:
-  - создает файл `.env` со следующим набором переменных:
-    ```
-    POSTGRES_USER=postgres
-    POSTGRES_PASSWORD=postgres
-    POSTGRES_HOST=localhost
-    POSTGRES_PORT=5432
-    ```
-  - устанавливает зависимости проекта в новое окружение `poetry`;  
-  - активирует это окружение;
+- выполнить команду `make create_env`, которая создает файл `.env` с необходимым набором переменных;
 
 ### Запуск:
-- выполнить команду `make up`, которая:
-
-    - поднимает docker-compose с БД с настройками из файла `.env` и ждет ее инициализации 5 секунды;
-    - накатывает на БД alembic-миграции;
-    - запускает приложение на 8000 порту;
+- тесты запускаются командой `make tests`, которая:
+  + поднимает `docker-compose-tests.yaml`;
+  + выводит в консоль результаты прогона тестов;
+  + выполняет команду `docker compose -f docker-compose-tests.yaml down`
+- команда `make up` запускает `docker-compose-dev.yaml` в detached-режиме; 
     
