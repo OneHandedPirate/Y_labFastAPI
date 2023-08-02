@@ -19,7 +19,7 @@ class BaseResponse(BaseModel):
     title: str
     description: str
 
-    @model_validator(mode='after')
+    @model_validator(mode="after")
     def convert_id(self):
         self.id = str(self.id)
         return self
@@ -37,7 +37,7 @@ class SubmenuResponse(BaseResponse):
 class DishResponse(BaseResponse):
     price: float | str
 
-    @model_validator(mode='after')
+    @model_validator(mode="after")
     def convert_price(self):
-        self.price = f'{self.price:.2f}'
+        self.price = f"{self.price:.2f}"
         return self

@@ -2,15 +2,15 @@ from fastapi import Depends, HTTPException, status
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models import Dish, Menu, Submenu
+from app.db.models import Base, Dish, Menu, Submenu
 from app.db.session import get_async_session
 from app.repositories.base import BaseCRUDRepository
 
 
 class SQLAlchemyRepository(BaseCRUDRepository):
-    model = None
-    related_model = None
-    related_model_field = None
+    model: Base | None = None
+    related_model: Base | None = None
+    related_model_field: str | None = None
 
     def __init__(self, session: AsyncSession = Depends(get_async_session)):
         self.session = session
@@ -21,7 +21,7 @@ class SQLAlchemyRepository(BaseCRUDRepository):
         else:
             stmt = select(self.model).where(
                 self.model.id == args[0],
-                getattr(self.model, self.related_model_field) == args[1]
+                getattr(self.model, self.related_model_field) == args[1],
             )
         obj = await self.session.scalar(stmt)
         self.verify_existence(obj)
@@ -32,7 +32,8 @@ class SQLAlchemyRepository(BaseCRUDRepository):
             stmt = select(self.model)
         else:
             stmt = select(self.model).where(
-                getattr(self.model, self.related_model_field) == args[0])
+                getattr(self.model, self.related_model_field) == args[0]
+            )
         objs = await self.session.scalars(stmt)
         return objs
 
@@ -56,18 +57,20 @@ class SQLAlchemyRepository(BaseCRUDRepository):
         self.verify_existence(obj_to_delete)
         await self.session.delete(obj_to_delete)
         await self.session.commit()
-        return {'detail': f'{self.model.__tablename__} with the id {_id} '
-                          f'successfully deleted'}
+        return {
+            "detail": f"{self.model.__tablename__} with the id {_id} "
+            f"successfully deleted"
+        }
 
     async def create(self, data, *args):
-        stmt = select(self.model).filter(self.model.title == data['title'])
+        stmt = select(self.model).filter(self.model.title == data["title"])
         obj_from_db = await self.session.scalar(stmt)
 
         if obj_from_db is not None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f'{self.model.__tablename__} with the '
-                       f'title {data["title"]} already exists in database'
+                detail=f"{self.model.__tablename__} with the "
+                f'title {data["title"]} already exists in database',
             )
         if args:
             new_obj = self.model(**data, **{self.related_model_field: args[0]})
@@ -80,8 +83,10 @@ class SQLAlchemyRepository(BaseCRUDRepository):
 
     def verify_existence(self, obj):
         if obj is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                                detail=f'{self.model.__tablename__} not found')
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"{self.model.__tablename__} not found",
+            )
 
 
 class MenuRepository(SQLAlchemyRepository):
@@ -91,10 +96,10 @@ class MenuRepository(SQLAlchemyRepository):
 class SubmenuRepository(SQLAlchemyRepository):
     model = Submenu
     related_model = Menu
-    related_model_field = 'menu_id'
+    related_model_field = "menu_id"
 
 
 class DishRepository(SQLAlchemyRepository):
     model = Dish
     related_model = Submenu
-    related_model_field = 'submenu_id'
+    related_model_field = "submenu_id"

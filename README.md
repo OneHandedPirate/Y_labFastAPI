@@ -20,5 +20,4 @@ cd Y_labFastAPI
   + поднимает `docker-compose-tests.yaml`;
   + выводит в консоль результаты прогона тестов;
   + выполняет команду `docker compose -f docker-compose-tests.yaml down`
-- команда `make up` запускает `docker-compose-dev.yaml` в detached-режиме; 
-    
+- команда `make up` запускает `docker-compose-dev.yaml` в detached-режиме;
