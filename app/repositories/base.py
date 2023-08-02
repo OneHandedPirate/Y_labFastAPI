@@ -2,22 +2,24 @@ from abc import ABC, abstractmethod
 
 
 class BaseCRUDRepository(ABC):
+    """Base repository for async CRUD operations"""
+
     @abstractmethod
-    def get(self, *args):
+    async def get(self, *args):
         pass
 
     @abstractmethod
-    def get_list(self):
+    async def get_list(self):
         pass
 
     @abstractmethod
-    def create(self, data):
+    async def create(self, data):
         pass
 
     @abstractmethod
-    def delete(self, *args):
+    async def delete(self, *args):
         pass
 
     @abstractmethod
-    def update(self, *args):
+    async def update(self, *args):
         pass

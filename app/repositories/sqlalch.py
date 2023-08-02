@@ -8,6 +8,8 @@ from app.repositories.base import BaseCRUDRepository
 
 
 class SQLAlchemyRepository(BaseCRUDRepository):
+    """Repository for async CRUD operations via SQLAlchemy"""
+
     model: Base | None = None
     related_model: Base | None = None
     related_model_field: str | None = None
@@ -82,6 +84,8 @@ class SQLAlchemyRepository(BaseCRUDRepository):
         return new_obj
 
     def verify_existence(self, obj):
+        """Verifies object existence in database"""
+
         if obj is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
@@ -90,16 +94,22 @@ class SQLAlchemyRepository(BaseCRUDRepository):
 
 
 class MenuRepository(SQLAlchemyRepository):
+    """Repo for CRUD operations with Menu objects"""
+
     model = Menu
 
 
 class SubmenuRepository(SQLAlchemyRepository):
+    """Repo for CRUD operations with Submenu objects"""
+
     model = Submenu
     related_model = Menu
     related_model_field = "menu_id"
 
 
 class DishRepository(SQLAlchemyRepository):
+    """Repo for CRUD operations with Dish objects"""
+
     model = Dish
     related_model = Submenu
     related_model_field = "submenu_id"

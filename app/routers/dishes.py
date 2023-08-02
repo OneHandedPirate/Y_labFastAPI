@@ -18,7 +18,7 @@ async def get_dish(
 
 @router.get("", response_model=list[DishResponse])
 async def get_dishes_list(
-    menu_id: int, submenu_id: int, dish_repo: DishRepository = Depends()
+    submenu_id: int, dish_repo: DishRepository = Depends()
 ):
     return await dish_repo.get_list(submenu_id)
 
@@ -26,7 +26,6 @@ async def get_dishes_list(
 @router.post("", response_model=DishResponse,
              status_code=status.HTTP_201_CREATED)
 async def create_dish(
-    menu_id: int,
     submenu_id: int,
     dish: DishCreate,
     dish_repo: DishRepository = Depends(),
@@ -36,8 +35,6 @@ async def create_dish(
 
 @router.patch("/{dish_id}", response_model=DishResponse)
 async def update_dish(
-    menu_id: int,
-    submenu_id: int,
     dish_id: int,
     dish: DishCreate,
     dish_repo: DishRepository = Depends(),
@@ -46,6 +43,5 @@ async def update_dish(
 
 
 @router.delete("/{dish_id}")
-async def delete_dish(menu_id: int, submenu_id, dish_id: int,
-                      dish_repo: DishRepository = Depends()):
+async def delete_dish(dish_id: int, dish_repo: DishRepository = Depends()):
     return await dish_repo.delete(dish_id)
