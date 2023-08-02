@@ -1,11 +1,12 @@
-from fastapi import Depends, status, APIRouter
+from fastapi import APIRouter, Depends, status
 
-from app.schemas import DishCreate, DishResponse
 from app.repositories.sqlalch import DishRepository
+from app.schemas import DishCreate, DishResponse
 
-
-router = APIRouter(prefix='/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes',
-                   tags=['Dishes'])
+router = APIRouter(
+    prefix='/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes',
+    tags=['Dishes']
+)
 
 
 @router.get('/{dish_id}', response_model=DishResponse)
@@ -20,7 +21,8 @@ async def get_dishes_list(menu_id: int, submenu_id: int,
     return await dish_repo.get_list(submenu_id)
 
 
-@router.post('', response_model=DishResponse, status_code=status.HTTP_201_CREATED)
+@router.post('', response_model=DishResponse,
+             status_code=status.HTTP_201_CREATED)
 async def create_dish(menu_id: int, submenu_id: int, dish: DishCreate,
                       dish_repo: DishRepository = Depends()):
     return await dish_repo.create(dish.model_dump(), submenu_id)

@@ -10,7 +10,8 @@ from app.db.models import Base
 
 
 config = context.config
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL + '?async_fallback=True')
+config.set_main_option("sqlalchemy.url",
+                       settings.DATABASE_URL + '?async_fallback=True')
 
 
 if config.config_file_name is not None:

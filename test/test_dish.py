@@ -26,7 +26,7 @@ class TestDish:
 
     async def test_dish_list(self, ac: AsyncClient, prefix):
         resp = await ac.get(f'{prefix}/{pytest.dish__menu_id}/submenus/'
-                             f'{pytest.dish__submenu_id}/dishes')
+                            f'{pytest.dish__submenu_id}/dishes')
         data = resp.json()
 
         assert resp.status_code == 200
@@ -34,7 +34,8 @@ class TestDish:
 
     async def test_dish_create(self, ac: AsyncClient, prefix, dish_data):
         resp = await ac.post(f'{prefix}/{pytest.dish__menu_id}/submenus/'
-                             f'{pytest.dish__submenu_id}/dishes', json=dish_data)
+                             f'{pytest.dish__submenu_id}/dishes',
+                             json=dish_data)
         data = resp.json()
 
         assert resp.status_code == 201
@@ -54,7 +55,8 @@ class TestDish:
 
     async def test_dish_details(self, ac: AsyncClient, prefix, dish_data):
         resp = await ac.get(f'{prefix}/{pytest.dish__menu_id}/submenus/'
-                            f'{pytest.dish__submenu_id}/dishes/{pytest.dish__dish_id}')
+                            f'{pytest.dish__submenu_id}'
+                            f'/dishes/{pytest.dish__dish_id}')
         data = resp.json()
 
         assert resp.status_code == 200
@@ -65,7 +67,8 @@ class TestDish:
 
     async def test_dish_update(self, ac: AsyncClient, prefix, dish_update):
         resp = await ac.patch(f'{prefix}/{pytest.dish__menu_id}/submenus/'
-                              f'{pytest.dish__submenu_id}/dishes/{pytest.dish__dish_id}',
+                              f'{pytest.dish__submenu_id}'
+                              f'/dishes/{pytest.dish__dish_id}',
                               json=dish_update)
         data = resp.json()
 
@@ -77,7 +80,8 @@ class TestDish:
 
     async def test_dish_details2(self, ac: AsyncClient, prefix, dish_update):
         resp = await ac.get(f'{prefix}/{pytest.dish__menu_id}/submenus/'
-                            f'{pytest.dish__submenu_id}/dishes/{pytest.dish__dish_id}')
+                            f'{pytest.dish__submenu_id}'
+                            f'/dishes/{pytest.dish__dish_id}')
         data = resp.json()
 
         assert resp.status_code == 200
@@ -88,7 +92,8 @@ class TestDish:
 
     async def test_dish_delete(self, ac: AsyncClient, prefix):
         resp = await ac.delete(f'{prefix}/{pytest.dish__menu_id}/submenus/'
-                               f'{pytest.dish__submenu_id}/dishes/{pytest.dish__dish_id}')
+                               f'{pytest.dish__submenu_id}'
+                               f'/dishes/{pytest.dish__dish_id}')
 
         assert resp.status_code == 200
 
@@ -102,7 +107,8 @@ class TestDish:
 
     async def test_dish_details3(self, ac: AsyncClient, prefix, dish_update):
         resp = await ac.get(f'{prefix}/{pytest.dish__menu_id}/submenus/'
-                            f'{pytest.dish__submenu_id}/dishes/{pytest.dish__dish_id}')
+                            f'{pytest.dish__submenu_id}'
+                            f'/dishes/{pytest.dish__dish_id}')
         data = resp.json()
 
         assert resp.status_code == 404
@@ -132,4 +138,3 @@ class TestDish:
 
         assert resp.status_code == 200
         assert data == []
-

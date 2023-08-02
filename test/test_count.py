@@ -26,7 +26,8 @@ class TestCount:
 
     async def test_dish1_create(self, ac: AsyncClient, prefix, dish_data):
         resp = await ac.post(f'{prefix}/{pytest.count__menu_id}/submenus/'
-                             f'{pytest.count__submenu_id}/dishes', json=dish_data)
+                             f'{pytest.count__submenu_id}/dishes',
+                             json=dish_data)
         data = resp.json()
 
         assert resp.status_code == 201
@@ -38,7 +39,8 @@ class TestCount:
 
     async def test_dish2_create(self, ac: AsyncClient, prefix, dish_data2):
         resp = await ac.post(f'{prefix}/{pytest.count__menu_id}/submenus/'
-                             f'{pytest.count__submenu_id}/dishes', json=dish_data2)
+                             f'{pytest.count__submenu_id}/dishes',
+                             json=dish_data2)
         data = resp.json()
 
         assert resp.status_code == 201
@@ -59,7 +61,8 @@ class TestCount:
         assert data['submenus_count'] == 1
         assert data['dishes_count'] == 2
 
-    async def test_submenu_details(self, ac: AsyncClient, prefix, submenu_data):
+    async def test_submenu_details(self, ac: AsyncClient, prefix,
+                                   submenu_data):
         resp = await ac.get(f'{prefix}/{pytest.count__menu_id}/submenus/'
                             f'{pytest.count__submenu_id}')
         data = resp.json()
@@ -113,7 +116,3 @@ class TestCount:
 
         assert resp.status_code == 200
         assert data == []
-
-
-
-

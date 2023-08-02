@@ -75,5 +75,3 @@ class TestMenu:
 
         assert resp.status_code == 404
         assert data['detail'] == 'menu not found'
-
-

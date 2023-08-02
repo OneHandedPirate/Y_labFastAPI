@@ -1,13 +1,13 @@
-from fastapi import Depends, status, APIRouter
+from fastapi import APIRouter, Depends, status
 
 from app.repositories.sqlalch import MenuRepository
 from app.schemas import MenuCreate, MenuResponse
 
-
 router = APIRouter(prefix='/api/v1/menus', tags=['Menu'])
 
 
-@router.post('', description='Create menus', status_code=status.HTTP_201_CREATED,
+@router.post('', description='Create menus',
+             status_code=status.HTTP_201_CREATED,
              response_model=MenuResponse)
 async def create_menu(menu: MenuCreate, menu_repo: MenuRepository = Depends()):
     return await menu_repo.create(menu.model_dump())

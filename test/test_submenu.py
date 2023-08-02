@@ -38,7 +38,8 @@ class TestSubmenu:
         assert resp.status_code == 200
         assert data != []
 
-    async def test_submenu_details(self, ac: AsyncClient, prefix, submenu_data):
+    async def test_submenu_details(self, ac: AsyncClient, prefix,
+                                   submenu_data):
         resp = await ac.get(f'{prefix}/{pytest.submenu__menu_id}/submenus/'
                             f'{pytest.submenu__submenu_id}')
         data = resp.json()
@@ -48,7 +49,8 @@ class TestSubmenu:
         assert data['description'] == submenu_data['description']
         assert data['id'] == pytest.submenu__submenu_id
 
-    async def test_submenu_update(self, ac: AsyncClient, prefix, submenu_update):
+    async def test_submenu_update(self, ac: AsyncClient, prefix,
+                                  submenu_update):
         resp = await ac.patch(f'{prefix}/{pytest.submenu__menu_id}/submenus/'
                               f'{pytest.submenu__submenu_id}',
                               json=submenu_update)
@@ -59,7 +61,8 @@ class TestSubmenu:
         assert data['description'] == submenu_update['description']
         assert data['id'] == pytest.submenu__submenu_id
 
-    async def test_submenu_details2(self, ac: AsyncClient, prefix, submenu_update):
+    async def test_submenu_details2(self, ac: AsyncClient, prefix,
+                                    submenu_update):
         resp = await ac.get(f'{prefix}/{pytest.submenu__menu_id}/submenus/'
                             f'{pytest.submenu__submenu_id}')
         data = resp.json()
@@ -82,7 +85,8 @@ class TestSubmenu:
         assert resp.status_code == 200
         assert data == []
 
-    async def test_submenu_details3(self, ac: AsyncClient, prefix, submenu_update):
+    async def test_submenu_details3(self, ac: AsyncClient, prefix,
+                                    submenu_update):
         resp = await ac.get(f'{prefix}/{pytest.submenu__menu_id}/submenus/'
                             f'{pytest.submenu__submenu_id}')
         data = resp.json()
@@ -101,4 +105,3 @@ class TestSubmenu:
 
         assert resp.status_code == 200
         assert data == []
-

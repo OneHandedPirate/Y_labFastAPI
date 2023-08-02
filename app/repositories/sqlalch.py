@@ -1,10 +1,10 @@
 from fastapi import Depends, HTTPException, status
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, delete, update
 
-from app.db.models import Menu, Submenu, Dish
-from app.repositories.base import BaseCRUDRepository
+from app.db.models import Dish, Menu, Submenu
 from app.db.session import get_async_session
+from app.repositories.base import BaseCRUDRepository
 
 
 class SQLAlchemyRepository(BaseCRUDRepository):
@@ -19,8 +19,10 @@ class SQLAlchemyRepository(BaseCRUDRepository):
         if self.related_model is None:
             stmt = select(self.model).where(self.model.id == args[0])
         else:
-            stmt = select(self.model).where(self.model.id == args[0],
-                getattr(self.model, self.related_model_field) == args[1])
+            stmt = select(self.model).where(
+                self.model.id == args[0],
+                getattr(self.model, self.related_model_field) == args[1]
+            )
         obj = await self.session.scalar(stmt)
         self.verify_existence(obj)
         return obj
@@ -62,9 +64,11 @@ class SQLAlchemyRepository(BaseCRUDRepository):
         obj_from_db = await self.session.scalar(stmt)
 
         if obj_from_db is not None:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
-                                detail=f'{self.model.__tablename__} with the '
-                                       f'title {data["title"]} already exists in database')
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f'{self.model.__tablename__} with the '
+                       f'title {data["title"]} already exists in database'
+            )
         if args:
             new_obj = self.model(**data, **{self.related_model_field: args[0]})
         else:

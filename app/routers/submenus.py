@@ -1,8 +1,7 @@
-from fastapi import Depends, APIRouter, status
+from fastapi import APIRouter, Depends, status
 
 from app.repositories.sqlalch import SubmenuRepository
-from app.schemas import SubmenuResponse, MenuCreate
-
+from app.schemas import MenuCreate, SubmenuResponse
 
 router = APIRouter(prefix='/api/v1/menus/{menu_id}/submenus', tags=['Submenu'])
 

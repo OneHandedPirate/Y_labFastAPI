@@ -79,5 +79,3 @@ def dish_update():
         'description': 'Updated dish description',
         'price': '15.10'
     }
-
-
