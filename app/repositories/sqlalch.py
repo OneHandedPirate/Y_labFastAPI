@@ -60,18 +60,18 @@ class SQLAlchemyRepository(BaseCRUDRepository):
         await self.session.delete(obj_to_delete)
         await self.session.commit()
         return {
-            "detail": f"{self.model.__tablename__} with the id {_id} "
-            f"successfully deleted"
+            'detail': f'{self.model.__tablename__} with the id {_id} '
+            f'successfully deleted'
         }
 
     async def create(self, data, *args):
-        stmt = select(self.model).filter(self.model.title == data["title"])
+        stmt = select(self.model).filter(self.model.title == data['title'])
         obj_from_db = await self.session.scalar(stmt)
 
         if obj_from_db is not None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"{self.model.__tablename__} with the "
+                detail=f'{self.model.__tablename__} with the '
                 f'title {data["title"]} already exists in database',
             )
         if args:
@@ -89,7 +89,7 @@ class SQLAlchemyRepository(BaseCRUDRepository):
         if obj is None:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"{self.model.__tablename__} not found",
+                detail=f'{self.model.__tablename__} not found',
             )
 
 
@@ -104,7 +104,7 @@ class SubmenuRepository(SQLAlchemyRepository):
 
     model = Submenu
     related_model = Menu
-    related_model_field = "menu_id"
+    related_model_field = 'menu_id'
 
 
 class DishRepository(SQLAlchemyRepository):
@@ -112,4 +112,4 @@ class DishRepository(SQLAlchemyRepository):
 
     model = Dish
     related_model = Submenu
-    related_model_field = "submenu_id"
+    related_model_field = 'submenu_id'
