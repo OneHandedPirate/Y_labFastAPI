@@ -17,14 +17,8 @@ class SQLAlchemyRepository(BaseCRUDRepository):
     def __init__(self, session: AsyncSession = Depends(get_async_session)):
         self.session = session
 
-    async def get(self, *args):
-        if self.related_model is None:
-            stmt = select(self.model).where(self.model.id == args[0])
-        else:
-            stmt = select(self.model).where(
-                self.model.id == args[0],
-                getattr(self.model, self.related_model_field) == args[1],
-            )
+    async def get(self, _id):
+        stmt = select(self.model).where(self.model.id == _id)
         obj = await self.session.scalar(stmt)
         self.verify_existence(obj)
         return obj
@@ -64,7 +58,7 @@ class SQLAlchemyRepository(BaseCRUDRepository):
             f'successfully deleted'
         }
 
-    async def create(self, data, *args):
+    async def create(self, data, related_model_id=None):
         stmt = select(self.model).filter(self.model.title == data['title'])
         obj_from_db = await self.session.scalar(stmt)
 
@@ -74,8 +68,8 @@ class SQLAlchemyRepository(BaseCRUDRepository):
                 detail=f'{self.model.__tablename__} with the '
                 f'title {data["title"]} already exists in database',
             )
-        if args:
-            new_obj = self.model(**data, **{self.related_model_field: args[0]})
+        if related_model_id:
+            new_obj = self.model(**data, **{self.related_model_field: related_model_id})
         else:
             new_obj = self.model(**data)
         self.session.add(new_obj)
