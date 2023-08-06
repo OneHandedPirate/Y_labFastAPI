@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Depends, status
 
-from app.schemas import DishCreate, DishResponse
-from app.services.menu import DishService
+from app.schemas.create import DishCreate
+from app.schemas.responses import DishResponse
+from app.services.handlers import DishService
 
 router = APIRouter(
     prefix='/api/v1/menus/{menu_id}/submenus/{submenu_id}/dishes',
-    tags=['Dishes']
+    tags=['Dish']
 )
 
 
@@ -13,6 +14,8 @@ router = APIRouter(
 async def get_dish(
     dish_id: int, dish_service: DishService = Depends()
 ):
+    """Get a particular **dish** by its **ID**."""
+
     return await dish_service.get(dish_id)
 
 
@@ -20,6 +23,8 @@ async def get_dish(
 async def get_dishes_list(
     submenu_id: int, dish_service: DishService = Depends()
 ):
+    """Get a list of dishes by **submenu** **ID**."""
+
     return await dish_service.get_list(submenu_id)
 
 
@@ -30,6 +35,8 @@ async def create_dish(
     dish: DishCreate,
     dish_service: DishService = Depends(),
 ):
+    """Create a new **dish**."""
+
     return await dish_service.create(dish.model_dump(), submenu_id)
 
 
@@ -39,9 +46,13 @@ async def update_dish(
     dish: DishCreate,
     dish_service: DishService = Depends(),
 ):
+    """Update a particular **dish**."""
+
     return await dish_service.update(dish_id, dish.model_dump())
 
 
 @router.delete('/{dish_id}')
 async def delete_dish(dish_id: int, dish_service: DishService = Depends()):
+    """Delete a particular **dish** by its **ID**."""
+
     return await dish_service.delete(dish_id)

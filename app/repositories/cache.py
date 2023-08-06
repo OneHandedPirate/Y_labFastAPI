@@ -2,6 +2,7 @@ from aioredis import Redis
 from fastapi import Depends
 
 from app.cache.connection import get_redis_connection
+from app.core.settings import CACHE_EXPIRE_TIME
 
 
 class BaseRedisCacheRepository:
@@ -17,13 +18,14 @@ class BaseRedisCacheRepository:
         return await self.cache.get(f'{self.namespace}:list:{related_model_id if related_model_id else ""}')
 
     async def set_item(self, item, item_id: int):
-        await self.cache.set(f'{self.namespace}:{item_id}', item)
-        await self.cache.expire(name=f'{self.namespace}:{item_id}', time=3600)
+        key = f'{self.namespace}:{item_id}'
+        await self.cache.set(key, item)
+        await self.cache.expire(name=key, time=CACHE_EXPIRE_TIME)
 
     async def set_list(self, items, related_model_id=None):
-        await self.cache.set(f'{self.namespace}:list:{related_model_id if related_model_id else ""}', items)
-        await self.cache.expire(name=f'{self.namespace}:list:{related_model_id if related_model_id else ""}',
-                                time=3600)
+        key = f'{self.namespace}:list:{related_model_id if related_model_id else ""}'
+        await self.cache.set(key, items)
+        await self.cache.expire(name=key, time=CACHE_EXPIRE_TIME)
 
     async def clear(self):
         await self.cache.flushall()

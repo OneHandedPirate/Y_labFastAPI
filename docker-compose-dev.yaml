@@ -20,6 +20,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
+
   db:
     container_name: "ylab_project_db"
     image: postgres:15.1-alpine
@@ -32,10 +33,11 @@ services:
     networks:
       - custom
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "psql -U ${POSTGRES_USER}", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
       interval: 3s
       timeout: 10s
       retries: 10
+
   redis:
     container_name: "redis"
     image: redis:7.0-alpine

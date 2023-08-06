@@ -1,39 +1,40 @@
+from typing import Any
+
 from fastapi import Depends, HTTPException, status
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models import Base, Dish, Menu, Submenu
+from app.db.models import Dish, Menu, Submenu
 from app.db.session import get_async_session
-from app.repositories.base import BaseCRUDRepository
 
 
-class SQLAlchemyRepository(BaseCRUDRepository):
+class SQLAlchemyRepository:
     """Repository for async CRUD operations via SQLAlchemy"""
 
-    model: Base | None = None
-    related_model: Base | None = None
-    related_model_field: str | None = None
+    model: Any = None
+    related_model: Any = None
+    related_model_field: Any = None
 
     def __init__(self, session: AsyncSession = Depends(get_async_session)):
         self.session = session
 
-    async def get(self, _id):
+    async def get(self, _id: int):
         stmt = select(self.model).where(self.model.id == _id)
         obj = await self.session.scalar(stmt)
         self.verify_existence(obj)
         return obj
 
-    async def get_list(self, *args):
+    async def get_list(self, related_model_id=None):
         if self.related_model is None:
             stmt = select(self.model)
         else:
             stmt = select(self.model).where(
-                getattr(self.model, self.related_model_field) == args[0]
+                getattr(self.model, self.related_model_field) == related_model_id
             )
         objs = await self.session.scalars(stmt)
         return objs
 
-    async def update(self, _id, data):
+    async def update(self, _id: int, data):
         stmt1 = select(self.model).where(self.model.id == _id)
         obj_to_update = await self.session.scalar(stmt1)
 
@@ -47,7 +48,7 @@ class SQLAlchemyRepository(BaseCRUDRepository):
         after_update = await self.session.scalar(stmt1)
         return after_update
 
-    async def delete(self, _id):
+    async def delete(self, _id: int):
         stmt = select(self.model).where(self.model.id == _id)
         obj_to_delete = await self.session.scalar(stmt)
         self.verify_existence(obj_to_delete)

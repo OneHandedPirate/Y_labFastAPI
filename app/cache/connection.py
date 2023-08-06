@@ -1,6 +1,6 @@
 import aioredis
 
-from settings import REDIS_URL
+from app.core.settings import REDIS_URL
 
 
 async def get_redis_connection():
