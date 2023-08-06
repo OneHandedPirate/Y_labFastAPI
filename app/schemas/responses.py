@@ -1,21 +1,6 @@
 from pydantic import BaseModel, ConfigDict, model_validator
 
 
-class MenuCreate(BaseModel):
-    """Schema for creating menu and submenu objects"""
-
-    title: str
-    description: str
-
-
-class DishCreate(BaseModel):
-    """Schema for creating dish objects"""
-
-    title: str
-    description: str
-    price: float
-
-
 class BaseResponse(BaseModel):
     """Base schema for response"""
 
