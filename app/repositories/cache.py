@@ -19,13 +19,11 @@ class BaseRedisCacheRepository:
 
     async def set_item(self, item, item_id: int):
         key = f'{self.namespace}:{item_id}'
-        await self.cache.set(key, item)
-        await self.cache.expire(name=key, time=CACHE_EXPIRE_TIME)
+        await self.cache.set(key, item, ex=CACHE_EXPIRE_TIME)
 
     async def set_list(self, items, related_model_id=None):
         key = f'{self.namespace}:list:{related_model_id if related_model_id else ""}'
-        await self.cache.set(key, items)
-        await self.cache.expire(name=key, time=CACHE_EXPIRE_TIME)
+        await self.cache.set(key, items, ex=CACHE_EXPIRE_TIME)
 
     async def clear(self):
         await self.cache.flushall()
