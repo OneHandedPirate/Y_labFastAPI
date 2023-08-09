@@ -42,13 +42,12 @@ class BaseRedisCacheRepository:
 
     async def set_item(self, item: bytes, *args: int) -> None:
         if len(args) == 1:
-            return await self.cache.set(f'menu:{args[0]}', item, ex=CACHE_EXPIRE_TIME)
+            await self.cache.set(f'menu:{args[0]}', item, ex=CACHE_EXPIRE_TIME)
         elif len(args) == 2:
-            return await self.cache.set(f'menu:{args[0]}:submenu:{args[1]}', item,
-                                        ex=CACHE_EXPIRE_TIME)
+            await self.cache.set(f'menu:{args[0]}:submenu:{args[1]}', item, ex=CACHE_EXPIRE_TIME)
         elif len(args) == 3:
-            return await self.cache.set(f'menu:{args[0]}:submenu:{args[1]}:dish:{args[2]}', item,
-                                        ex=CACHE_EXPIRE_TIME)
+            await self.cache.set(f'menu:{args[0]}:submenu:{args[1]}:dish:{args[2]}', item,
+                                 ex=CACHE_EXPIRE_TIME)
 
     async def update_operation(self, *args: int) -> None:
         if len(args) == 1:
