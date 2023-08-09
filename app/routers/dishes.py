@@ -18,11 +18,11 @@ async def get_dish(menu_id, submenu_id, dish_id: int, dish_service: DishService 
 
 @router.get('', response_model=list[DishResponse])
 async def get_dishes_list(
-    submenu_id: int, dish_service: DishService = Depends()
+    menu_id: int, submenu_id: int, dish_service: DishService = Depends()
 ):
     """Get a list of dishes by **submenu** **ID**."""
 
-    return await dish_service.get_list(submenu_id)
+    return await dish_service.get_list(menu_id, submenu_id)
 
 
 @router.post('', response_model=DishResponse,
@@ -40,13 +40,15 @@ async def create_dish(
 
 @router.patch('/{dish_id}', response_model=DishResponse)
 async def update_dish(
+    menu_id: int,
+    submenu_id: int,
     dish_id: int,
     dish: DishCreate,
     dish_service: DishService = Depends(),
 ):
     """Update a particular **dish**."""
 
-    return await dish_service.update(dish_id, dish.model_dump())
+    return await dish_service.update(dish.model_dump(), menu_id, submenu_id, dish_id)
 
 
 @router.delete('/{dish_id}')

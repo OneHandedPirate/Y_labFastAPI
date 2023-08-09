@@ -35,13 +35,14 @@ async def get_submenu(
 
 @router.patch('/{submenu_id}', response_model=SubmenuResponse)
 async def update_submenu(
+    menu_id: int,
     submenu_id: int,
     submenu: MenuCreate,
     submenu_service: SubmenuService = Depends(),
 ):
     """Update a particular **submenu**."""
 
-    return await submenu_service.update(submenu_id, submenu.model_dump())
+    return await submenu_service.update(submenu.model_dump(), menu_id, submenu_id)
 
 
 @router.delete('/{submenu_id}')

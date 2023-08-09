@@ -45,4 +45,4 @@ async def update_menu(
 ):
     """Update a particular **menu**."""
 
-    return await menu_service.update(menu_id, menu.model_dump())
+    return await menu_service.update(menu.model_dump(), menu_id)
