@@ -11,7 +11,7 @@ router = APIRouter(
 
 
 @router.get('/{dish_id}', response_model=DishResponse)
-async def get_dish(menu_id, submenu_id, dish_id: int, dish_service: DishService = Depends()):
+async def get_dish(menu_id: int, submenu_id: int, dish_id: int, dish_service: DishService = Depends()):
     """Get a particular **dish** by its **ID**."""
     return await dish_service.get(menu_id, submenu_id, dish_id)
 
