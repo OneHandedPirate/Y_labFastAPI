@@ -1,7 +1,7 @@
 from typing import Any
 
 from fastapi import Depends, HTTPException, status
-from sqlalchemy import select, update
+from sqlalchemy import ScalarResult, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.models import Dish, Menu, Submenu
@@ -15,16 +15,16 @@ class SQLAlchemyRepository:
     related_model: Any = None
     related_model_field: Any = None
 
-    def __init__(self, session: AsyncSession = Depends(get_async_session)):
+    def __init__(self, session: AsyncSession = Depends(get_async_session)) -> None:
         self.session = session
 
-    async def get(self, _id: int):
+    async def get(self, _id: int) -> ScalarResult:
         stmt = select(self.model).where(self.model.id == _id)
         obj = await self.session.scalar(stmt)
         self.verify_existence(obj)
         return obj
 
-    async def get_list(self, related_model_id=None):
+    async def get_list(self, related_model_id: None | int = None) -> ScalarResult:
         if self.related_model is None:
             stmt = select(self.model)
         else:
@@ -34,7 +34,7 @@ class SQLAlchemyRepository:
         objs = await self.session.scalars(stmt)
         return objs
 
-    async def update(self, _id: int, data):
+    async def update(self, _id: int, data: dict) -> ScalarResult:
         stmt1 = select(self.model).where(self.model.id == _id)
         obj_to_update = await self.session.scalar(stmt1)
 
@@ -48,7 +48,7 @@ class SQLAlchemyRepository:
         after_update = await self.session.scalar(stmt1)
         return after_update
 
-    async def delete(self, _id: int):
+    async def delete(self, _id: int) -> dict:
         stmt = select(self.model).where(self.model.id == _id)
         obj_to_delete = await self.session.scalar(stmt)
         self.verify_existence(obj_to_delete)
@@ -59,7 +59,7 @@ class SQLAlchemyRepository:
             f'successfully deleted'
         }
 
-    async def create(self, data, related_model_id=None):
+    async def create(self, data: dict, related_model_id=None) -> ScalarResult:
         stmt = select(self.model).filter(self.model.title == data['title'])
         obj_from_db = await self.session.scalar(stmt)
 
@@ -78,7 +78,7 @@ class SQLAlchemyRepository:
         await self.session.refresh(new_obj)
         return new_obj
 
-    def verify_existence(self, obj):
+    def verify_existence(self, obj) -> None:
         """Verifies object existence in database"""
 
         if obj is None:

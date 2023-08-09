@@ -26,11 +26,11 @@ async def get_submenu_list(menu_id: int,
 
 @router.get('/{submenu_id}', response_model=SubmenuResponse)
 async def get_submenu(
-    submenu_id: int, submenu_service: SubmenuService = Depends()
+    menu_id: int, submenu_id: int, submenu_service: SubmenuService = Depends()
 ):
     """Get a particular **submenu** by its **ID**."""
 
-    return await submenu_service.get(submenu_id)
+    return await submenu_service.get(menu_id, submenu_id)
 
 
 @router.patch('/{submenu_id}', response_model=SubmenuResponse)
@@ -45,8 +45,11 @@ async def update_submenu(
 
 
 @router.delete('/{submenu_id}')
-async def delete_menu(submenu_id: int,
-                      submenu_service: SubmenuService = Depends()):
+async def delete_menu(
+        menu_id: int,
+        submenu_id: int,
+        submenu_service: SubmenuService = Depends()
+):
     """Delete a particular **submenu** by its **ID**."""
 
-    return await submenu_service.delete(submenu_id)
+    return await submenu_service.delete(menu_id, submenu_id)

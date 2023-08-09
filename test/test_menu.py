@@ -3,14 +3,14 @@ from httpx import AsyncClient
 
 
 class TestMenu:
-    async def test_menu_empty(self, ac: AsyncClient, prefix):
+    async def test_menu_empty(self, ac: AsyncClient, prefix: str):
         resp = await ac.get(prefix)
         data = resp.json()
 
         assert resp.status_code == 200
         assert data == []
 
-    async def test_menu_create(self, ac: AsyncClient, prefix, menu_data):
+    async def test_menu_create(self, ac: AsyncClient, prefix: str, menu_data: dict):
         resp = await ac.post(prefix, json=menu_data)
         data = resp.json()
 
@@ -20,14 +20,14 @@ class TestMenu:
         assert data['id'] is not False
         pytest.menu__menu_id = data['id']
 
-    async def test_menu_not_empty(self, ac: AsyncClient, prefix):
+    async def test_menu_not_empty(self, ac: AsyncClient, prefix: str):
         resp = await ac.get(prefix)
         data = resp.json()
 
         assert resp.status_code == 200
         assert data != []
 
-    async def test_menu_details(self, ac: AsyncClient, prefix, menu_data):
+    async def test_menu_details(self, ac: AsyncClient, prefix: str, menu_data: dict):
         resp = await ac.get(f'{prefix}/{pytest.menu__menu_id}')
         data = resp.json()
 
@@ -36,7 +36,7 @@ class TestMenu:
         assert data['description'] == menu_data['description']
         assert data['id'] == pytest.menu__menu_id
 
-    async def test_menu_update(self, ac: AsyncClient, prefix, menu_update):
+    async def test_menu_update(self, ac: AsyncClient, prefix: str, menu_update: dict):
         resp = await ac.patch(f'{prefix}/{pytest.menu__menu_id}',
                               json=menu_update)
 
@@ -47,7 +47,7 @@ class TestMenu:
         assert data['description'] == menu_update['description']
         assert data['id'] == pytest.menu__menu_id
 
-    async def test_menu_details2(self, ac: AsyncClient, prefix, menu_update):
+    async def test_menu_details2(self, ac: AsyncClient, prefix: str, menu_update: dict):
         resp = await ac.get(f'{prefix}/{pytest.menu__menu_id}')
         data = resp.json()
 
@@ -56,19 +56,19 @@ class TestMenu:
         assert data['description'] == menu_update['description']
         assert data['id'] == pytest.menu__menu_id
 
-    async def test_menu_delete(self, ac: AsyncClient, prefix):
+    async def test_menu_delete(self, ac: AsyncClient, prefix: str):
         resp = await ac.delete(f'{prefix}/{pytest.menu__menu_id}')
 
         assert resp.status_code == 200
 
-    async def test_menu_empty2(self, ac: AsyncClient, prefix):
+    async def test_menu_empty2(self, ac: AsyncClient, prefix: str):
         resp = await ac.get(prefix)
         data = resp.json()
 
         assert resp.status_code == 200
         assert data == []
 
-    async def test_menu_details_deleted(self, ac: AsyncClient, prefix):
+    async def test_menu_details_deleted(self, ac: AsyncClient, prefix: str):
         resp = await ac.get(f'{prefix}/{pytest.menu__menu_id}')
         data = resp.json()
 

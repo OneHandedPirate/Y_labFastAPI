@@ -3,7 +3,7 @@ from httpx import AsyncClient
 
 
 class TestCount:
-    async def test_menu_create(self, ac: AsyncClient, prefix, menu_data):
+    async def test_menu_create(self, ac: AsyncClient, prefix: str, menu_data: dict):
         resp = await ac.post(prefix, json=menu_data)
         data = resp.json()
 
@@ -13,7 +13,7 @@ class TestCount:
         assert data['id'] is not False
         pytest.count__menu_id = data['id']
 
-    async def test_submenu_create(self, ac: AsyncClient, prefix, submenu_data):
+    async def test_submenu_create(self, ac: AsyncClient, prefix: str, submenu_data: dict):
         resp = await ac.post(
             f'{prefix}/{pytest.count__menu_id}/submenus', json=submenu_data
         )
@@ -25,7 +25,7 @@ class TestCount:
         assert data['id'] is not False
         pytest.count__submenu_id = data['id']
 
-    async def test_dish1_create(self, ac: AsyncClient, prefix, dish_data):
+    async def test_dish1_create(self, ac: AsyncClient, prefix: str, dish_data: dict):
         resp = await ac.post(
             f'{prefix}/{pytest.count__menu_id}/submenus/'
             f'{pytest.count__submenu_id}/dishes',
@@ -40,7 +40,7 @@ class TestCount:
         assert data['id'] is not False
         pytest.count__dish1_id = data['id']
 
-    async def test_dish2_create(self, ac: AsyncClient, prefix, dish_data2):
+    async def test_dish2_create(self, ac: AsyncClient, prefix: str, dish_data2: dict):
         resp = await ac.post(
             f'{prefix}/{pytest.count__menu_id}/submenus/'
             f'{pytest.count__submenu_id}/dishes',
@@ -55,7 +55,7 @@ class TestCount:
         assert data['id'] is not False
         pytest.count__dish2_id = data['id']
 
-    async def test_menu_details(self, ac: AsyncClient, prefix, menu_data):
+    async def test_menu_details(self, ac: AsyncClient, prefix: str, menu_data: dict):
         resp = await ac.get(f'{prefix}/{pytest.count__menu_id}')
         data = resp.json()
 
@@ -66,8 +66,8 @@ class TestCount:
         assert data['submenus_count'] == 1
         assert data['dishes_count'] == 2
 
-    async def test_submenu_details(self, ac: AsyncClient, prefix,
-                                   submenu_data):
+    async def test_submenu_details(self, ac: AsyncClient, prefix: str,
+                                   submenu_data: dict):
         resp = await ac.get(
             f'{prefix}/{pytest.count__menu_id}/submenus/'
             f'{pytest.count__submenu_id}'
@@ -80,7 +80,7 @@ class TestCount:
         assert data['id'] == pytest.count__submenu_id
         assert data['dishes_count'] == 2
 
-    async def test_submenu_delete(self, ac: AsyncClient, prefix):
+    async def test_submenu_delete(self, ac: AsyncClient, prefix: str):
         resp = await ac.delete(
             f'{prefix}/{pytest.count__menu_id}/submenus/'
             f'{pytest.count__submenu_id}'
@@ -88,14 +88,14 @@ class TestCount:
 
         assert resp.status_code == 200
 
-    async def test_submenu_list(self, ac: AsyncClient, prefix):
+    async def test_submenu_list(self, ac: AsyncClient, prefix: str):
         resp = await ac.get(f'{prefix}/{pytest.count__menu_id}/submenus')
         data = resp.json()
 
         assert resp.status_code == 200
         assert data == []
 
-    async def test_dish_list(self, ac: AsyncClient, prefix):
+    async def test_dish_list(self, ac: AsyncClient, prefix: str):
         resp = await ac.get(
             f'{prefix}/{pytest.count__menu_id}/submenus/'
             f'{pytest.count__submenu_id}/dishes'
@@ -105,7 +105,7 @@ class TestCount:
         assert resp.status_code == 200
         assert data == []
 
-    async def test_menu_details2(self, ac: AsyncClient, prefix, menu_data):
+    async def test_menu_details2(self, ac: AsyncClient, prefix: str, menu_data: dict):
         resp = await ac.get(f'{prefix}/{pytest.count__menu_id}')
         data = resp.json()
 
@@ -116,12 +116,12 @@ class TestCount:
         assert data['submenus_count'] == 0
         assert data['dishes_count'] == 0
 
-    async def test_menu_delete(self, ac: AsyncClient, prefix):
+    async def test_menu_delete(self, ac: AsyncClient, prefix: str):
         resp = await ac.delete(f'{prefix}/{pytest.count__menu_id}')
 
         assert resp.status_code == 200
 
-    async def test_menu_list(self, ac: AsyncClient, prefix):
+    async def test_menu_list(self, ac: AsyncClient, prefix: str):
         resp = await ac.get(f'{prefix}')
         data = resp.json()
 

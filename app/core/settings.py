@@ -8,16 +8,16 @@ from environ import (
     REDIS_PORT,
 )
 
-DATABASE_URL = (
+DATABASE_URL: str = (
     f'postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}'
     f'@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}'
 )
 
-REDIS_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}'
+REDIS_URL: str = f'redis://{REDIS_HOST}:{REDIS_PORT}'
 
-CACHE_EXPIRE_TIME = 3600
+CACHE_EXPIRE_TIME: int = 3600
 
-APP_DESC = """
+APP_DESC: str = """
 At the moment the application provides the following functionality:
 
 CRUD operations with **Menu**, **Submenu** and **Dish** entities.
@@ -31,7 +31,7 @@ CRUD operations are as follows:
 * **Delete** entity;
 """
 
-TAGS_META = [
+TAGS_META: list = [
     {
         'name': 'Menu',
         'description': 'CRUD operations with **menu** entities.'

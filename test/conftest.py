@@ -21,17 +21,17 @@ async def ac() -> AsyncGenerator[AsyncClient, None]:
 
 
 @pytest.fixture
-def prefix():
+def prefix() -> str:
     return '/api/v1/menus'
 
 
 @pytest.fixture
-def menu_data():
+def menu_data() -> dict:
     return {'title': 'Menu title', 'description': 'Menu description'}
 
 
 @pytest.fixture
-def menu_update():
+def menu_update() -> dict:
     return {
         'title': 'Updated menu title',
         'description': 'Updated menu description'
@@ -39,12 +39,12 @@ def menu_update():
 
 
 @pytest.fixture
-def submenu_data():
+def submenu_data() -> dict:
     return {'title': 'Submenu title', 'description': 'Submenu description'}
 
 
 @pytest.fixture
-def submenu_update():
+def submenu_update() -> dict:
     return {
         'title': 'Updated submenu title',
         'description': 'Updated submenu description',
@@ -52,7 +52,7 @@ def submenu_update():
 
 
 @pytest.fixture
-def dish_data():
+def dish_data() -> dict:
     return {
         'title': 'Dish title', 'description':
         'Dish description', 'price': '25.55'
@@ -60,7 +60,7 @@ def dish_data():
 
 
 @pytest.fixture
-def dish_data2():
+def dish_data2() -> dict:
     return {
         'title': 'Dish title 2',
         'description': 'Dish description 2',
@@ -69,7 +69,7 @@ def dish_data2():
 
 
 @pytest.fixture
-def dish_update():
+def dish_update() -> dict:
     return {
         'title': 'Updated dish title',
         'description': 'Updated dish description',
