@@ -29,7 +29,7 @@ class BaseRedisCacheRepository:
             else:
                 return await self.cache.get(f'menu:{args[0]}:submenu:{args[1]}:dish:list')
 
-    async def set_list(self, items_list, *args: int) -> None:
+    async def set_list(self, items_list: bytes, *args: int) -> None:
         if not args:
             await self.cache.set('menu:list', items_list, ex=CACHE_EXPIRE_TIME)
         else:

@@ -59,7 +59,7 @@ class SQLAlchemyRepository:
             f'successfully deleted'
         }
 
-    async def create(self, data: dict, related_model_id=None) -> ScalarResult:
+    async def create(self, data: dict, related_model_id: None | int = None) -> ScalarResult:
         stmt = select(self.model).filter(self.model.title == data['title'])
         obj_from_db = await self.session.scalar(stmt)
 
@@ -78,7 +78,7 @@ class SQLAlchemyRepository:
         await self.session.refresh(new_obj)
         return new_obj
 
-    def verify_existence(self, obj) -> None:
+    def verify_existence(self, obj: ScalarResult | None) -> None:
         """Verifies object existence in database"""
 
         if obj is None:
