@@ -1,8 +1,9 @@
 from sqlalchemy import Column, ForeignKey, Integer, Numeric, String, cast, func, select
-from sqlalchemy.ext.declarative import DeclarativeMeta
-from sqlalchemy.orm import column_property, declarative_base, relationship
+from sqlalchemy.orm import DeclarativeBase, column_property, relationship
 
-Base: DeclarativeMeta = declarative_base()
+
+class Base(DeclarativeBase):
+    pass
 
 
 class Dish(Base):
