@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, BackgroundTasks, Depends, status
 
 from app.schemas.create import MenuCreate
 from app.schemas.responses import SubmenuResponse
@@ -10,10 +10,11 @@ router = APIRouter(prefix='/api/v1/menus/{menu_id}/submenus', tags=['Submenu'])
 @router.post('', status_code=status.HTTP_201_CREATED,
              response_model=SubmenuResponse)
 async def create_submenu(menu_id: int, submenu: MenuCreate,
+                         bg_tasks: BackgroundTasks,
                          submenu_service: SubmenuService = Depends()):
     """Create a new **submenu**."""
 
-    return await submenu_service.create(submenu.model_dump(), menu_id)
+    return await submenu_service.create(submenu.model_dump(), menu_id, bg_tasks=bg_tasks)
 
 
 @router.get('', response_model=list[SubmenuResponse])
@@ -38,19 +39,21 @@ async def update_submenu(
     menu_id: int,
     submenu_id: int,
     submenu: MenuCreate,
+    bg_tasks: BackgroundTasks,
     submenu_service: SubmenuService = Depends(),
 ):
     """Update a particular **submenu**."""
 
-    return await submenu_service.update(submenu.model_dump(), menu_id, submenu_id)
+    return await submenu_service.update(submenu.model_dump(), menu_id, submenu_id, bg_tasks=bg_tasks)
 
 
 @router.delete('/{submenu_id}')
 async def delete_menu(
         menu_id: int,
         submenu_id: int,
+        bg_tasks: BackgroundTasks,
         submenu_service: SubmenuService = Depends()
 ):
     """Delete a particular **submenu** by its **ID**."""
 
-    return await submenu_service.delete(menu_id, submenu_id)
+    return await submenu_service.delete(menu_id, submenu_id, bg_tasks=bg_tasks)

@@ -42,3 +42,11 @@ class DishResponse(BaseResponse):
 
         self.price = f'{self.price:.2f}'
         return self
+
+
+class SubmenuAllResponse(BaseResponse):
+    dishes: list[DishResponse]
+
+
+class MenuAllResponse(BaseResponse):
+    submenus: list[SubmenuAllResponse]

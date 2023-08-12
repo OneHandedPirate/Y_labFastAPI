@@ -1,10 +1,17 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, BackgroundTasks, Depends, status
 
 from app.schemas.create import MenuCreate
-from app.schemas.responses import MenuResponse
+from app.schemas.responses import MenuAllResponse, MenuResponse
 from app.services.handlers import MenuService
 
 router = APIRouter(prefix='/api/v1/menus', tags=['Menu'])
+
+
+@router.get('/all', response_model=list[MenuAllResponse])
+async def get_all(menu_service: MenuService = Depends()):
+    """Get all **menus** with **submenus** and **dishes** included"""
+
+    return await menu_service.get_all()
 
 
 @router.post(
@@ -12,10 +19,10 @@ router = APIRouter(prefix='/api/v1/menus', tags=['Menu'])
     status_code=status.HTTP_201_CREATED,
     response_model=MenuResponse,
 )
-async def create_menu(menu: MenuCreate, menu_service: MenuService = Depends()):
+async def create_menu(menu: MenuCreate, bg_tasks: BackgroundTasks, menu_service: MenuService = Depends()):
     """Create a new **menu**."""
 
-    return await menu_service.create(menu.model_dump())
+    return await menu_service.create(menu.model_dump(), bg_tasks=bg_tasks)
 
 
 @router.get('/{menu_id}', response_model=MenuResponse)
@@ -33,16 +40,16 @@ async def get_menu_list(menu_service: MenuService = Depends()):
 
 
 @router.delete('/{menu_id}')
-async def delete_menu(menu_id: int, menu_service: MenuService = Depends()):
+async def delete_menu(menu_id: int, bg_tasks: BackgroundTasks, menu_service: MenuService = Depends()):
     """Delete a particular **menu** by its **ID**."""
 
-    return await menu_service.delete(menu_id)
+    return await menu_service.delete(menu_id, bg_tasks=bg_tasks)
 
 
 @router.patch('/{menu_id}', response_model=MenuResponse)
 async def update_menu(
-    menu_id: int, menu: MenuCreate, menu_service: MenuService = Depends()
+    menu_id: int, menu: MenuCreate, bg_tasks: BackgroundTasks, menu_service: MenuService = Depends()
 ):
     """Update a particular **menu**."""
 
-    return await menu_service.update(menu.model_dump(), menu_id)
+    return await menu_service.update(menu.model_dump(), menu_id, bg_tasks=bg_tasks)

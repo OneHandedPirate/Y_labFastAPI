@@ -3,6 +3,7 @@ from typing import Any
 from fastapi import Depends, HTTPException, status
 from sqlalchemy import ScalarResult, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
 from app.db.models import Dish, Menu, Submenu
 from app.db.session import get_async_session
@@ -21,7 +22,7 @@ class SQLAlchemyRepository:
     async def get(self, _id: int) -> ScalarResult:
         stmt = select(self.model).where(self.model.id == _id)
         obj = await self.session.scalar(stmt)
-        self.verify_existence(obj)
+        await self.verify_existence(obj)
         return obj
 
     async def get_list(self, related_model_id: None | int = None) -> ScalarResult:
@@ -38,7 +39,7 @@ class SQLAlchemyRepository:
         stmt1 = select(self.model).where(self.model.id == _id)
         obj_to_update = await self.session.scalar(stmt1)
 
-        self.verify_existence(obj_to_update)
+        await self.verify_existence(obj_to_update)
 
         stmt2 = update(self.model).where(self.model.id == _id).values(**data)
 
@@ -51,7 +52,7 @@ class SQLAlchemyRepository:
     async def delete(self, _id: int) -> dict:
         stmt = select(self.model).where(self.model.id == _id)
         obj_to_delete = await self.session.scalar(stmt)
-        self.verify_existence(obj_to_delete)
+        await self.verify_existence(obj_to_delete)
         await self.session.delete(obj_to_delete)
         await self.session.commit()
         return {
@@ -78,7 +79,7 @@ class SQLAlchemyRepository:
         await self.session.refresh(new_obj)
         return new_obj
 
-    def verify_existence(self, obj: ScalarResult | None) -> None:
+    async def verify_existence(self, obj: ScalarResult | None) -> None:
         """Verifies object existence in database"""
 
         if obj is None:
@@ -92,6 +93,10 @@ class MenuRepository(SQLAlchemyRepository):
     """Repo for CRUD operations with Menu objects"""
 
     model = Menu
+
+    async def get_all(self):
+        stmt = select(self.model).options(selectinload(self.model.submenus).selectinload(Submenu.dishes))
+        return await self.session.scalars(stmt)
 
 
 class SubmenuRepository(SQLAlchemyRepository):

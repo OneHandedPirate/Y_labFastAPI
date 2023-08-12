@@ -80,6 +80,15 @@ class TestCount:
         assert data['id'] == pytest.count__submenu_id
         assert data['dishes_count'] == 2
 
+    async def test_all(self, ac: AsyncClient, prefix: str):
+        resp = await ac.get(f'{prefix}/all')
+        data = resp.json()
+
+        assert resp.status_code == 200
+        assert len(data) == 1
+        assert len(data[0]['submenus']) == 1
+        assert len(data[0]['submenus'][0]['dishes']) == 2
+
     async def test_submenu_delete(self, ac: AsyncClient, prefix: str):
         resp = await ac.delete(
             f'{prefix}/{pytest.count__menu_id}/submenus/'
@@ -94,6 +103,14 @@ class TestCount:
 
         assert resp.status_code == 200
         assert data == []
+
+    async def test_all2(self, ac: AsyncClient, prefix: str):
+        resp = await ac.get(f'{prefix}/all')
+        data = resp.json()
+
+        assert resp.status_code == 200
+        assert len(data) == 1
+        assert data[0]['submenus'] == []
 
     async def test_dish_list(self, ac: AsyncClient, prefix: str):
         resp = await ac.get(
@@ -123,6 +140,13 @@ class TestCount:
 
     async def test_menu_list(self, ac: AsyncClient, prefix: str):
         resp = await ac.get(f'{prefix}')
+        data = resp.json()
+
+        assert resp.status_code == 200
+        assert data == []
+
+    async def test_all3(self, ac: AsyncClient, prefix: str):
+        resp = await ac.get(f'{prefix}/all')
         data = resp.json()
 
         assert resp.status_code == 200

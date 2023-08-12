@@ -1,6 +1,6 @@
 import pickle
 
-from fastapi import Depends
+from fastapi import BackgroundTasks, Depends
 
 from app.repositories.cache import (
     BaseRedisCacheRepository,
@@ -46,25 +46,33 @@ class BaseService:
             await self.cache.set_list(pickle.dumps(item_list))
         return item_list
 
-    async def update(self, data: dict, *args: int):
-        await self.cache.update_operation(*args)
+    async def update(self, data: dict, *args: int, bg_tasks: BackgroundTasks):
+        bg_tasks.add_task(self.cache.update_operation, *args)
         return await self.repo.update(args[-1], data)
 
-    async def create(self, data: dict, *args: int):
+    async def create(self, data: dict, *args: int, bg_tasks: BackgroundTasks):
         if args:
-            await self.cache.create_operation(*args, entity_name=self.cache.namespace)
+            bg_tasks.add_task(self.cache.create_operation, *args, entity_name=self.cache.namespace)
         else:
-            await self.cache.create_operation(entity_name=self.cache.namespace)
+            bg_tasks.add_task(self.cache.create_operation, entity_name=self.cache.namespace)
         return await self.repo.create(data, args[-1] if args else None)
 
-    async def delete(self, *args: int):
-        await self.cache.del_operation(*args, entity_name=self.cache.namespace)
+    async def delete(self, *args: int, bg_tasks: BackgroundTasks):
+        bg_tasks.add_task(self.cache.del_operation, *args, entity_name=self.cache.namespace)
         return await self.repo.delete(args[-1])
 
 
 class MenuService(BaseService):
     def __init__(self, repo: MenuRepository = Depends(), cache: MenuCacheRepositoryBase = Depends()):
         super().__init__(repo, cache)
+
+    async def get_all(self):
+        from_cache = await self.cache.get_item()
+        if from_cache:
+            return pickle.loads(from_cache)
+        _all = list(await self.repo.get_all())
+        await self.cache.set_all(pickle.dumps(_all))
+        return _all
 
 
 class SubmenuService(BaseService):

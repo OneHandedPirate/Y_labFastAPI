@@ -12,7 +12,9 @@ class BaseRedisCacheRepository:
         self.cache = cache
 
     async def get_item(self, *args: int) -> bytes | None:
-        if len(args) == 1:
+        if not args:
+            to_get = 'menu:all'
+        elif len(args) == 1:
             to_get = f'menu:{args[0]}'
         elif len(args) == 2:
             to_get = f'menu:{args[0]}:submenu:{args[1]}'
@@ -59,12 +61,13 @@ class BaseRedisCacheRepository:
         else:
             keys = await self.cache.keys(f'*dish:{args[-1]}')
             keys += await self.cache.keys(f'menu:{args[0]}:submenu:{args[1]}:dish:list')
+        keys += await self.cache.keys('menu:all')
         if keys:
             await self.cache.unlink(*keys)
 
     async def create_operation(self, *args: int | None, entity_name: str | None = None) -> None:
         keys = await self.cache.keys('menu:list')
-
+        keys += await self.cache.keys('menu:all')
         if entity_name == 'submenu':
             keys += await self.cache.keys(f'menu:{args[0]}')
             keys += await self.cache.keys(f'menu:{args[0]}:submenu:list')
@@ -87,7 +90,7 @@ class BaseRedisCacheRepository:
             keys += await self.cache.keys(f'menu:{args[0]}')
             keys += await self.cache.keys(f'menu:{args[0]}:submenu:list')
             keys += await self.cache.keys(f'menu:{args[0]}:submenu:{args[1]}:dish:list')
-
+        keys += await self.cache.keys('menu:all')
         keys += await self.cache.keys('menu:list')
 
         if keys:
@@ -96,6 +99,9 @@ class BaseRedisCacheRepository:
 
 class MenuCacheRepositoryBase(BaseRedisCacheRepository):
     namespace = 'menu'
+
+    async def set_all(self, items: bytes) -> None:
+        await self.cache.set('menu:all', items)
 
 
 class SubmenuCacheRepositoryBase(BaseRedisCacheRepository):
