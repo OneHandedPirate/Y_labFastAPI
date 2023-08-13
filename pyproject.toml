@@ -19,6 +19,9 @@ pytest-asyncio = "^0.21.1"
 httpx = "^0.24.1"
 pre-commit = "^3.3.3"
 aioredis = "^2.0.1"
+celery = "^5.3.1"
+openpyxl = "^3.1.2"
+requests = "^2.31.0"
 
 
 [build-system]

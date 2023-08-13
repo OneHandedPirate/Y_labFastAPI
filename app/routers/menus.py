@@ -8,7 +8,7 @@ router = APIRouter(prefix='/api/v1/menus', tags=['Menu'])
 
 
 @router.get('/all_without_ids', response_model=list[MenuAllButIDResponse])
-async def get_without_ids(menu_service: MenuService = Depends()):
+async def get_all_without_ids(menu_service: MenuService = Depends()):
     """Get all **menus** with **submenus** and **dishes** included without **ids**"""
 
     return await menu_service.get_all()
@@ -16,7 +16,7 @@ async def get_without_ids(menu_service: MenuService = Depends()):
 
 @router.get('/all', response_model=list[MenuAllResponse])
 async def get_all(menu_service: MenuService = Depends()):
-    """Get all **menus** with **submenus** and **dishes** included"""
+    """Get all **menus** with **submenus** and **dishes** included (nested)"""
 
     return await menu_service.get_all()
 

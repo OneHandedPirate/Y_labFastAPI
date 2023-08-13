@@ -4,6 +4,10 @@ from environ import (
     POSTGRES_PASSWORD,
     POSTGRES_PORT,
     POSTGRES_USER,
+    RABBIT_HOST,
+    RABBIT_PASSWORD,
+    RABBIT_USER,
+    RABBIT_VHOST,
     REDIS_HOST,
     REDIS_PORT,
 )
@@ -15,7 +19,14 @@ DATABASE_URL: str = (
 
 REDIS_URL: str = f'redis://{REDIS_HOST}:{REDIS_PORT}'
 
+RABBITMQ_URL: str = f'amqp://{RABBIT_USER}:{RABBIT_PASSWORD}@{RABBIT_HOST}:5672/{RABBIT_VHOST}'
+
 CACHE_EXPIRE_TIME: int = 3600
+
+ADMIN_EXCEL_PATH: str = 'app/admin/Menu.xlsx'
+
+APP_HOST_PORT: str = 'app:8000'
+
 
 APP_DESC: str = """
 At the moment the application provides the following functionality:
