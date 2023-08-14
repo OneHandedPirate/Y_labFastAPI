@@ -44,8 +44,8 @@ def sync_db_from_tuples(excel: tuple, db: tuple) -> str:
         for menu in excel_menus[-diff_menus:]:
             requests.post(f'http://{APP_HOST_PORT}/api/v1/menus', json=menu)
         db_menus = db_to_tuple(requests.get(f'http://{APP_HOST_PORT}/api/v1/menus/all').json())[0]
-    elif len(excel_menus) < len(db_menus):
-        for menu in entities_to_delete(excel_menus, db_menus):
+    if menus_to_del := entities_to_delete(excel_menus, db_menus):
+        for menu in menus_to_del:
             requests.delete(f'http://{APP_HOST_PORT}/api/v1/menus/{menu["id"]}')
         db_menus, db_submenus, db_dishes = db_to_tuple(
             requests.get(f'http://{APP_HOST_PORT}/api/v1/menus/all').json()
@@ -68,8 +68,8 @@ def sync_db_from_tuples(excel: tuple, db: tuple) -> str:
         db_submenus = db_to_tuple(
             requests.get(f'http://{APP_HOST_PORT}/api/v1/menus/all').json()
         )[1]
-    elif len(excel_submenus) < len(db_submenus):
-        for submenu in entities_to_delete(excel_submenus, db_submenus):
+    if subs_to_del := entities_to_delete(excel_submenus, db_submenus):
+        for submenu in subs_to_del:
             requests.delete(
                 f'http://{APP_HOST_PORT}/api/v1/menus/{submenu["menu_id"]}/submenus/{submenu["id"]}'
             )
@@ -94,8 +94,8 @@ def sync_db_from_tuples(excel: tuple, db: tuple) -> str:
         db_dishes = db_to_tuple(
             requests.get(f'http://{APP_HOST_PORT}/api/v1/menus/all').json()
         )[2]
-    elif len(excel_dishes) < len(db_dishes):
-        for dish in entities_to_delete(excel_dishes, db_dishes):
+    if dishes_to_del := entities_to_delete(excel_dishes, db_dishes):
+        for dish in dishes_to_del:
             requests.delete(
                 f'http://{APP_HOST_PORT}/api/v1/menus/{dish["menu_id"]}'
                 f'/submenus/{dish["submenu_id"]}/dishes/{dish["id"]}'
