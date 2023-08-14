@@ -39,12 +39,11 @@ def sync_db_from_tuples(excel: tuple, db: tuple) -> str:
     db_menus, db_submenus, db_dishes = db
 
     # Proccess menus
-    if len(excel_menus) > len(db_menus):
-        diff_menus = len(excel_menus) - len(db_menus)
-        for menu in excel_menus[-diff_menus:]:
+    if menus_to_add := get_difference(db_menus, excel_menus):
+        for menu in menus_to_add:
             requests.post(f'http://{APP_HOST_PORT}/api/v1/menus', json=menu)
         db_menus = db_to_tuple(requests.get(f'http://{APP_HOST_PORT}/api/v1/menus/all').json())[0]
-    if menus_to_del := entities_to_delete(excel_menus, db_menus):
+    if menus_to_del := get_difference(excel_menus, db_menus):
         for menu in menus_to_del:
             requests.delete(f'http://{APP_HOST_PORT}/api/v1/menus/{menu["id"]}')
         db_menus, db_submenus, db_dishes = db_to_tuple(
@@ -58,9 +57,8 @@ def sync_db_from_tuples(excel: tuple, db: tuple) -> str:
             )
 
     # Proccess submenus
-    if len(excel_submenus) > len(db_submenus):
-        diff_submenus = len(excel_submenus) - len(db_submenus)
-        for submenu in excel_submenus[-diff_submenus:]:
+    if submenus_to_add := get_difference(db_submenus, excel_submenus):
+        for submenu in submenus_to_add:
             requests.post(
                 f'http://{APP_HOST_PORT}/api/v1/menus/{submenu["menu_id"]}/submenus',
                 json=submenu
@@ -68,7 +66,7 @@ def sync_db_from_tuples(excel: tuple, db: tuple) -> str:
         db_submenus = db_to_tuple(
             requests.get(f'http://{APP_HOST_PORT}/api/v1/menus/all').json()
         )[1]
-    if subs_to_del := entities_to_delete(excel_submenus, db_submenus):
+    if subs_to_del := get_difference(excel_submenus, db_submenus):
         for submenu in subs_to_del:
             requests.delete(
                 f'http://{APP_HOST_PORT}/api/v1/menus/{submenu["menu_id"]}/submenus/{submenu["id"]}'
@@ -85,16 +83,15 @@ def sync_db_from_tuples(excel: tuple, db: tuple) -> str:
             )
 
     # Proccess dishes
-    if len(excel_dishes) > len(db_dishes):
-        diff_dishes = len(excel_dishes) - len(db_dishes)
-        for dish in excel_dishes[-diff_dishes:]:
+    if dishes_to_add := get_difference(db_dishes, excel_dishes):
+        for dish in dishes_to_add:
             requests.post(f'http://{APP_HOST_PORT}/api/v1/menus/{dish["menu_id"]}'
                           f'/submenus/{dish["submenu_id"]}/dishes',
                           json=dish)
         db_dishes = db_to_tuple(
             requests.get(f'http://{APP_HOST_PORT}/api/v1/menus/all').json()
         )[2]
-    if dishes_to_del := entities_to_delete(excel_dishes, db_dishes):
+    if dishes_to_del := get_difference(excel_dishes, db_dishes):
         for dish in dishes_to_del:
             requests.delete(
                 f'http://{APP_HOST_PORT}/api/v1/menus/{dish["menu_id"]}'
@@ -114,9 +111,9 @@ def sync_db_from_tuples(excel: tuple, db: tuple) -> str:
     return 'DB synchronized (from tuples)'
 
 
-def entities_to_delete(excel: dict, db: dict) -> list:
-    to_del = []
-    for entity in db:
-        if entity['id'] not in [ent['id'] for ent in excel]:
-            to_del.append(entity)
-    return to_del
+def get_difference(list1: list, list2: list) -> list:
+    diff = []
+    for entity in list2:
+        if entity['id'] not in [ent['id'] for ent in list1]:
+            diff.append(entity)
+    return diff
