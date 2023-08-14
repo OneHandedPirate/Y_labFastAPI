@@ -1,17 +1,10 @@
 from fastapi import APIRouter, BackgroundTasks, Depends, status
 
 from app.schemas.create import MenuCreate
-from app.schemas.responses import MenuAllButIDResponse, MenuAllResponse, MenuResponse
+from app.schemas.responses import MenuAllResponse, MenuResponse
 from app.services.handlers import MenuService
 
 router = APIRouter(prefix='/api/v1/menus', tags=['Menu'])
-
-
-@router.get('/all_without_ids', response_model=list[MenuAllButIDResponse])
-async def get_all_without_ids(menu_service: MenuService = Depends()):
-    """Get all **menus** with **submenus** and **dishes** included without **ids**"""
-
-    return await menu_service.get_all()
 
 
 @router.get('/all', response_model=list[MenuAllResponse])

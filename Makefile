@@ -5,8 +5,6 @@ up:
 	docker compose -f docker-compose-dev.yaml up -d
 down:
 	docker compose -f docker-compose-dev.yaml down
-	docker image rm restaurantfastapi-app
-	docker image rm restaurantfastapi-celery
 tests:
 	docker compose -f docker-compose-tests.yaml up -d
 	docker compose -f docker-compose-tests.yaml logs -f app

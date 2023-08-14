@@ -49,34 +49,3 @@ class SubmenuAllResponse(BaseResponse):
 
 class MenuAllResponse(BaseResponse):
     submenus: list[SubmenuAllResponse]
-
-
-class DishesNoIDResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    title: str
-    description: str
-    price: float | str
-
-    @model_validator(mode='after')
-    def convert_price(self):
-        """Converts price value to a string"""
-
-        self.price = f'{self.price:.2f}'
-        return self
-
-
-class SubmenuAllButIDResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    title: str
-    description: str
-    dishes: list[DishesNoIDResponse]
-
-
-class MenuAllButIDResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
-
-    title: str
-    description: str
-    submenus: list[SubmenuAllButIDResponse]
