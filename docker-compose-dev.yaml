@@ -76,6 +76,8 @@ services:
       RABBIT_USER: "${RABBIT_USER}"
       RABBIT_PASSWORD: "${RABBIT_PASSWORD}"
     command: celery -A app.celery.celeryconfig worker -l info -B
+    volumes:
+      - /home/onehandedpirate/Python/RestaurantFastAPI/app/admin:/code/app/admin
     depends_on:
       db:
         condition: service_healthy
