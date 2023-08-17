@@ -32,7 +32,7 @@ cd Y_labFastAPI
 #### Синхронизация к excel:
 
 - При изменении excel-файла нужно учитывать, что в нем записаны реальные `id` объектов базы данных, т.е. если даже мы удалим, скажем, меню `Алкогольное меню`, то при создании другого меню в `Menu.xlsx` все равно следует назначить ему `id` 3, первому подменю в нем - `id` 5, а первому блюду в нем - `id` 13 и т.д.
-- Для синхронизации локального файла `Menu.xlsx` вместо тома `admin_folder` в контейнере `celery` в файле `docker-compose-dev.yaml` нужно подставить абсолютный путь до папки `app/admin` на вашей машине (например, у меня это `/home/onehandedpirate/Python/RestaurantFastAPI/app/admin`, т.е. раздел `volumes` в контейнере `celery` должен выглядеть у меня выглядит так: `/home/onehandedpirate/Python/RestaurantFastAPI/app/admin:code/app/admin`).
+- Для синхронизации локального файла `Menu.xlsx` вместо тома `admin_folder` в контейнере `celery` в файле `docker-compose-dev.yaml` нужно подставить абсолютный путь до папки `app/admin` на вашей машине (например, у меня это `/home/onehandedpirate/Python/RestaurantFastAPI/app/admin`, т.е. раздел `volumes` в контейнере `celery` у меня должен выглядеть так: <br>`- /home/onehandedpirate/Python/RestaurantFastAPI/app/admin:code/app/admin`<br>).
 #### Выполненные задания повышенной сложности:
 
 - Реализовать тестовый сценарий «Проверка кол-ва блюд и подменю в меню» из Postman с помощью pytest:<br>
