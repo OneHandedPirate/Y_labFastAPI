@@ -23,7 +23,7 @@ def excel_to_list(file_path: str) -> list:
                 current_menu['submenus'].append(current_submenu)
             current_submenu = {'id': str(row[1]), 'title': row[2], 'description': row[3], 'dishes': []}
         elif type(row[2]) == int:
-            current_dish = {'id': str(row[2]), 'title': row[3], 'description': row[4], 'price': str(row[5])}
+            current_dish = {'id': str(row[2]), 'title': row[3], 'description': row[4], 'price': f'{row[5]:.2f}'}
             current_submenu['dishes'].append(current_dish)
 
     if current_menu:

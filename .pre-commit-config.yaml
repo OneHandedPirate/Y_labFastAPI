@@ -48,4 +48,3 @@ repos:
     hooks:
     -   id: mypy
         exclude: 'migrations'
-        additional_dependencies: [types-requests]

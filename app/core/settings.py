@@ -25,7 +25,7 @@ CACHE_EXPIRE_TIME: int = 3600
 
 ADMIN_EXCEL_PATH: str = 'app/admin/Menu.xlsx'
 
-APP_HOST_PORT: str = 'app:8000'
+APP_API_V1_URL: str = 'http://app:8000/api/v1'
 
 
 APP_DESC: str = """

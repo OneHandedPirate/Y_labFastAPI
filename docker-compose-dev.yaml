@@ -58,6 +58,11 @@ services:
       RABBITMQ_DEFAULT_VHOST: "${RABBIT_VHOST}"
       RABBITMQ_DEFAULT_USER: "${RABBIT_USER}"
       RABBITMQ_DEFAULT_PASS: "${RABBIT_PASSWORD}"
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 5s
+      timeout: 30s
+      retries: 3
     networks:
       - custom
 
@@ -81,6 +86,10 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      rabbit:
+        condition: service_healthy
+      app:
+        condition: service_started
     networks:
       - custom
 
