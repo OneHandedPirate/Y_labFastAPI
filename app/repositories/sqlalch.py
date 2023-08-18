@@ -1,7 +1,7 @@
 from typing import Any
 
 from fastapi import Depends, HTTPException, status
-from sqlalchemy import ScalarResult, select, update
+from sqlalchemy import ScalarResult, String, cast, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -61,7 +61,7 @@ class SQLAlchemyRepository:
         }
 
     async def create(self, data: dict, related_model_id: None | int = None) -> ScalarResult:
-        stmt = select(self.model).filter(self.model.title == data['title'])
+        stmt = select(self.model).filter(self.model.title == cast(data['title'], String))
         obj_from_db = await self.session.scalar(stmt)
 
         if obj_from_db is not None:

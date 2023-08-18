@@ -40,6 +40,10 @@ CRUD operations are as follows:
 * **Create** entity;
 * **Update** entity;
 * **Delete** entity;
+
+Caching with **Redis**;
+
+Database synchronization with excel file;
 """
 
 TAGS_META: list = [

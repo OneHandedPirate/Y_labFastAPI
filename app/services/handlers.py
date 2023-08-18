@@ -3,23 +3,18 @@ import pickle
 from fastapi import BackgroundTasks, Depends
 
 from app.repositories.cache import (
-    BaseRedisCacheRepository,
     DishCacheRepositoryBase,
     MenuCacheRepositoryBase,
     SubmenuCacheRepositoryBase,
 )
-from app.repositories.sqlalch import (
-    DishRepository,
-    MenuRepository,
-    SQLAlchemyRepository,
-    SubmenuRepository,
-)
+from app.repositories.sqlalch import DishRepository, MenuRepository, SubmenuRepository
 
 
 class BaseService:
     """Base service for endpoints"""
 
-    def __init__(self, repo: SQLAlchemyRepository, cache: BaseRedisCacheRepository):
+    def __init__(self, repo: MenuRepository | SubmenuRepository | DishRepository,
+                 cache: MenuCacheRepositoryBase | SubmenuCacheRepositoryBase | DishCacheRepositoryBase):
         self.repo = repo
         self.cache = cache
 
