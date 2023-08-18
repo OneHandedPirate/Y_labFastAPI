@@ -75,3 +75,8 @@ def dish_update() -> dict:
         'description': 'Updated dish description',
         'price': '15.10',
     }
+
+
+@pytest.fixture(scope='session')
+def temp() -> dict:
+    return {}
