@@ -94,7 +94,7 @@ class MenuRepository(SQLAlchemyRepository):
 
     model = Menu
 
-    async def get_all(self):
+    async def get_all(self) -> ScalarResult:
         stmt = select(self.model).options(selectinload(self.model.submenus).selectinload(Submenu.dishes))
         return await self.session.scalars(stmt)
 
